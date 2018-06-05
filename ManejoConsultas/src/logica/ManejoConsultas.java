@@ -2,6 +2,7 @@ package logica;
 
 import cableado.IConsultas;
 import cableado.IMenuConsultas;
+import presentacion.VistaHistorialAcademicoConsejero;
 
 public class ManejoConsultas implements IMenuConsultas{
 	
@@ -20,7 +21,8 @@ public class ManejoConsultas implements IMenuConsultas{
 
 	@Override
 	public void mostrarDisponibilidadCupos() {
-				
+		InformacionDisponibilidadCupos infoCup = new InformacionDisponibilidadCupos(consejero);
+		infoCup.crearVentana();
 	}
 
 	@Override
@@ -30,18 +32,21 @@ public class ManejoConsultas implements IMenuConsultas{
 	}
 
 	@Override
-	public void mostrarEspaciosAcademicosEstudiante() {
-		
+	public void mostrarHistorialConsejero() {
+		VistaHistorialAcademicoConsejero vista = new VistaHistorialAcademicoConsejero(estudiante,consejero);
+        vista.setVisible(true);
 	}
 
 	@Override
 	public void mostrarHistorialAcademicoConsejero() {
-		
+		InformacionHistoriaConsejero historiaConsejero = new InformacionHistoriaConsejero(consejero);
+		historiaConsejero.crearVentana();
 	}
 
 	@Override
 	public void mostrarHistorialAcademicoEstudiante() {
-		
+		InformacionHistoria historia = new InformacionHistoria(estudiante);
+		historia.crearVentana();
 	}
 
 	@Override
@@ -64,12 +69,13 @@ public class ManejoConsultas implements IMenuConsultas{
 
 	@Override
 	public void mostrarViabilidadConsejero() {
-				
+		
 	}
 
 	@Override
 	public void mostrarViabilidadEstudiante() {
-		
+		InformacionEleccionEstudiante infoEleccion = new InformacionEleccionEstudiante(estudiante);
+		infoEleccion.crearVentana();
 	}
 
 	@Override

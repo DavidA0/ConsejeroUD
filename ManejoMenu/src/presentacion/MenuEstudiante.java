@@ -5,7 +5,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import cableado.IConsultas;
+import cableado.ILogin;
 import logica.VentanaEstudiante;
+import utilidades.Cargador;
 
 public class MenuEstudiante extends javax.swing.JFrame {
     /**
@@ -16,7 +18,7 @@ public class MenuEstudiante extends javax.swing.JFrame {
     IConsultas conestudiante;
     VentanaEstudiante venest;
     public MenuEstudiante(IConsultas cones) {
-    	this.conestudiante=cones;
+    	conestudiante=cones;
         initComponents();
         ancho = 480;
         alto = 170;
@@ -92,10 +94,18 @@ public class MenuEstudiante extends javax.swing.JFrame {
         String opcion = (String) comboMenu.getSelectedItem();
         switch(opcion){
             case "Viabilidad Academica":
-                JOptionPane.showMessageDialog(null, "Proximamente..."); 
+            	if(venest.comprobacionMenuConsultas()==true){
+            		dispose();
+                }
+            	venest.consultarViabilidadEstudiante();
                 break;
             case "Historial Academico":
-                JOptionPane.showMessageDialog(null, "Proximamente..."); 
+                if(venest.comprobacionMenuConsultas()==true){
+                	if(conestudiante.existenciaHistoria()==false){
+                		dispose();
+                	}
+                }
+                venest.consultarHistorial();
                 break;
             case "Horario":
             	if(venest.comprobacionMenuConsultas()==true){
@@ -113,11 +123,21 @@ public class MenuEstudiante extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSeleccionarActionPerformed
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
-        /*Inicio inicio = new Inicio();
-        inicio.setLocationRelativeTo(null);
-        inicio.setVisible(true);
-        Conexion.Desconectar();
-        dispose();*/
+    	Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
+		Class cls = null;
+		try {
+			cls = cargador.cargarUnaClase(ILogin.class.getName());
+			if(cls != null) {
+				dispose();
+				ILogin ILogin = (ILogin)cls.newInstance();
+				ILogin.crearVentana();
+				conestudiante.desconectar();
+			}else{
+				JOptionPane.showMessageDialog(null, "No se encuentra componente Login");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     

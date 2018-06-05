@@ -13,7 +13,7 @@ public class InformacionEspaciosAcademicos {
 	}
 		
 	public void crearVentana(){
-        VistaEspaciosAcademicos vistaEspacios = new VistaEspaciosAcademicos();
+        VistaEspaciosAcademicos vistaEspacios = new VistaEspaciosAcademicos(consulta);
         vistaEspacios.setVisible(true);
     }
 }

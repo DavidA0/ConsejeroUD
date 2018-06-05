@@ -2,6 +2,11 @@ package presentacion;
 
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+import cableado.IConsultas;
+import cableado.LoginMenu;
+import utilidades.Cargador;
 
 public class VistaEspaciosAcademicos extends javax.swing.JFrame {
 
@@ -12,7 +17,10 @@ public class VistaEspaciosAcademicos extends javax.swing.JFrame {
 	
 	private int ancho, alto;
     
-    public VistaEspaciosAcademicos() {
+	IConsultas consulta;
+	
+    public VistaEspaciosAcademicos(IConsultas cons) {
+		consulta = cons;
         initComponents();
         preferencias();
     }
@@ -46,13 +54,14 @@ public class VistaEspaciosAcademicos extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         txtAsignatura.setFont(new java.awt.Font("OCR A Extended", 0, 18)); // NOI18N
-        txtAsignatura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtAsignaturaActionPerformed(evt);
-            }
-        });
         getContentPane().add(txtAsignatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 53, 360, -1));
 
+        btnConsulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultaActionPerformed(evt);
+            }
+        });
+        
         btnVolver.setFont(new java.awt.Font("OCR A Extended", 0, 18)); // NOI18N
         btnVolver.setText("Volver");
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
@@ -73,12 +82,37 @@ public class VistaEspaciosAcademicos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtAsignaturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAsignaturaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtAsignaturaActionPerformed
-
+    private void btnConsultaActionPerformed(java.awt.event.ActionEvent evt) {
+    	if(txtAsignatura.getText().length() == 0){
+            JOptionPane.showMessageDialog(null, "No ha digitado ninguna asignatura");
+        }else{
+	    	if(consulta.comprobarAsignatura(txtAsignatura.getText())==false){
+		    	EspaciosAcademicos vista = new EspaciosAcademicos(consulta,txtAsignatura.getText());
+		        vista.setVisible(true);
+		        dispose();
+	    	}else{
+	    		JOptionPane.showMessageDialog(null, "No se encuentra la asignatura");
+	    	}
+        }
+    }
+    
+    
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        // TODO add your handling code here:
+    	Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
+		Class cls = null;
+		try {                 
+			cls = cargador.cargarUnaClase(LoginMenu.class.getName());
+			if(cls != null) {
+                dispose(); 
+                LoginMenu LoginMenu = (LoginMenu)cls.newInstance();
+                LoginMenu.setConsejero(consulta);
+                LoginMenu.mostrarMenuConsejero();
+			}else{
+    			JOptionPane.showMessageDialog(null, "No se encuentra componente ManejoMenu");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }//GEN-LAST:event_btnVolverActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,9 +1,15 @@
 package presentacion;
 
 import cableado.IConsultas;
+import cableado.ILogin;
+import cableado.LoginMenu;
+
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 import logica.InformacionEstudiante;
+import utilidades.Cargador;
 
 public class VistaInformacion extends javax.swing.JFrame {
     /**
@@ -83,10 +89,21 @@ public class VistaInformacion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        /*MenuEstudiante eleccion = new MenuEstudiante(Integer.toString(cod));
-        eleccion.setLocationRelativeTo(null);
-        eleccion.setVisible(true);
-        dispose();*/
+    	Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
+		Class cls = null;
+		try {                 
+			cls = cargador.cargarUnaClase(LoginMenu.class.getName());
+			if(cls != null) {
+                dispose(); 
+                LoginMenu LoginMenu = (LoginMenu)cls.newInstance();
+                LoginMenu.setEstudiante(consulta);
+                LoginMenu.mostrarMenuEstudiante();
+			}else{
+    			JOptionPane.showMessageDialog(null, "No se encuentra componente ManejoMenu");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }//GEN-LAST:event_jButton1ActionPerformed
     public void mostrarinformacion(){
     	InformacionEstudiante info = new InformacionEstudiante(consulta);

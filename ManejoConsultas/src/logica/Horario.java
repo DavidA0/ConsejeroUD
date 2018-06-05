@@ -61,7 +61,7 @@ public class Horario{
         return tablaHorario;
     }
     
-    private int consultarHora(int horainicio){
+    public int consultarHora(int horainicio){
         if(horainicio==600){
             return 0;
         }

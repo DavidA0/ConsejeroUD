@@ -14,9 +14,9 @@ public interface IMenuConsultas {
 	public void mostrarHorario();
 	public void mostrarInformacionEstudiante();
 	public void mostrarViabilidadEstudiante();
-	public void mostrarEspaciosAcademicosEstudiante();
 	public void mostrarHistorialAcademicoEstudiante();
 
 	public String mostrarNombreEstudiante();
 	public String mostrarNombreConsejero();
+	public void mostrarHistorialConsejero();
 }

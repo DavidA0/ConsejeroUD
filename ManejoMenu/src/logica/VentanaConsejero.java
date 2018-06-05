@@ -28,6 +28,40 @@ public class VentanaConsejero{
         vista.setVisible(true);
     }
     
+    public void consultarDisponibilidad(){
+    	Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
+		Class cls = null;
+		try {
+			cls = cargador.cargarUnaClase(IMenuConsultas.class.getName());
+			if(cls != null) {
+				IMenuConsultas IMenuConsultas = (IMenuConsultas)cls.newInstance();
+				IMenuConsultas.setConsejero(consejero);
+				IMenuConsultas.mostrarDisponibilidadCupos();
+			}else{
+    			JOptionPane.showMessageDialog(null, "No se encuentra componente ManejoConsultas");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public void consultarHistorial(){
+    	Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
+		Class cls = null;
+		try {
+			cls = cargador.cargarUnaClase(IMenuConsultas.class.getName());
+			if(cls != null) {
+				IMenuConsultas IMenuConsultas = (IMenuConsultas)cls.newInstance();
+				IMenuConsultas.setConsejero(consejero);
+				IMenuConsultas.mostrarHistorialAcademicoConsejero();
+			}else{
+    			JOptionPane.showMessageDialog(null, "No se encuentra componente ManejoConsultas");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+    
     public boolean comprobacionMenuConsultas(){
     	Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
 		Class cls = null;

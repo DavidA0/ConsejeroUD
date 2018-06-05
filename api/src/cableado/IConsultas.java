@@ -13,6 +13,7 @@ public interface IConsultas {
     public void setCodigoEstudiante(int cod);
     public String consultarNombreEstudiante();
     public void conexion();
+    public void desconectar();
     
     public String getNombreConsejero();
     public int getIdentificacionConsejero();
@@ -22,4 +23,10 @@ public interface IConsultas {
     public void setCodigoConsejero(int codigo);
     public int getCodigoConsejero();
     public String consultarNombreConsejero();
+    public boolean comprobarAsignatura(String Asignatura);
+    public String[][] desplegarInformacionAsignaturas(String Asignatura);
+    public boolean existenciaHistoria();
+    public String[][] desplegarInformacionHistoria();
+    public int cuposMateria(String grupo);
+    public boolean existenciaGrupo(String grupo);
 }

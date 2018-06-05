@@ -5,7 +5,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import cableado.IConsultas;
+import cableado.ILogin;
 import logica.VentanaConsejero;
+import utilidades.Cargador;
 
 public class MenuConsejero extends javax.swing.JFrame {
     /**
@@ -86,11 +88,21 @@ public class MenuConsejero extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
-        /*Inicio inicio = new Inicio();
-        inicio.setLocationRelativeTo(null);
-        inicio.setVisible(true);
-        Conexion.Desconectar();
-        dispose();*/
+    	Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
+		Class cls = null;
+		try {
+			cls = cargador.cargarUnaClase(ILogin.class.getName());
+			if(cls != null) {
+				dispose();
+				ILogin ILogin = (ILogin)cls.newInstance();
+				ILogin.crearVentana();
+				consulta.desconectar();
+			}else{
+				JOptionPane.showMessageDialog(null, "No se encuentra componente Login");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
@@ -103,13 +115,19 @@ public class MenuConsejero extends javax.swing.JFrame {
                 vencon.consultarEspacios();
                 break;
             case "Disponibilidad Cupos":
-                JOptionPane.showMessageDialog(null, "Proximamente..."); 
+            	if(vencon.comprobacionMenuConsultas()==true){
+            		dispose();
+            	}
+            	vencon.consultarDisponibilidad();
                 break;
-            case "Viabilidad Academica":
+            /*case "Viabilidad Academica":
                 JOptionPane.showMessageDialog(null, "Proximamente..."); 
-                break;
+                break;*/
             case "Historial Academico":
-                JOptionPane.showMessageDialog(null, "Proximamente..."); 
+            	if(vencon.comprobacionMenuConsultas()==true){
+            		dispose();
+            	}
+            	vencon.consultarHistorial();
                 break;
             case "Informacion":
             	if(vencon.comprobacionMenuConsultas()==true){
@@ -126,7 +144,7 @@ public class MenuConsejero extends javax.swing.JFrame {
         comboMenu.removeAllItems();
         comboMenu.addItem("Espacios Academicos");
         comboMenu.addItem("Disponibilidad Cupos");
-        comboMenu.addItem("Viabilidad Academica");
+        //comboMenu.addItem("Viabilidad Academica");
         comboMenu.addItem("Historial Academico");
         comboMenu.addItem("Informacion");
         comboMenu.setEditable(false);

@@ -33,6 +33,11 @@ public class ManejoInfoDB implements IConsultas{
 	}
 
 	@Override
+	public void desconectar() {
+		Conexion.Desconectar();
+	}
+
+	@Override
 	public String consultarConsejeroEstudiante() {
 		String consejero=" ";
         String sql;
@@ -156,7 +161,7 @@ public class ManejoInfoDB implements IConsultas{
 	        } catch (SQLException ex) {
 	            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
 	        }
-	        return false;
+	        return true;
 	}
 
 	@Override
@@ -274,6 +279,161 @@ public class ManejoInfoDB implements IConsultas{
 	@Override
 	public void setCodigoEstudiante(int cod) {
 		this.codigoEstudiante = cod;
+	}
+
+	@Override
+	public String[][] desplegarInformacionAsignaturas(String asignatura) {
+		int i=0;
+        String sql;
+        sql="select A.nombreasignatura, A.creditos, A.idasignatura, G.idgrupo, G.salon, G.horainicio, G.horafinal, G.dia1, G.dia2 ,G.dia3"
+        		+ " from asignatura A, grupoasignatura G "
+        		+ "where A.nombreasignatura = '"+asignatura+"' and A.idasignatura = G.idasignatura";
+        try {
+            Statement st = Conexion.getConexion().createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next()){
+                i=i+1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String[][] grupos = new String[i][10];
+        i=0;
+        /*sql="select A.nombreasignatura, A.creditos, A.idasignatura, G.idgrupo, G.salon, G.horainicio, G.horafinal, G.dia1, G.dia2 ,G.dia3"
+        		+ " from asignatura A, grupoasignatura G "
+        		+ "where A.nombreasignatura = '"+asignatura+"' and A.idasignatura = G.idasignatura";*/
+        try {
+            Statement st = Conexion.getConexion().createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next()){
+                grupos[i][0]= rs.getString(1);
+                grupos[i][1]= rs.getString(2);
+                grupos[i][2]= rs.getString(3);
+                grupos[i][3]= rs.getString(4);
+                grupos[i][4]= rs.getString(5);
+                grupos[i][5]= rs.getString(6);
+                grupos[i][6]= rs.getString(7);
+                grupos[i][7]= rs.getString(8);
+                grupos[i][8]= rs.getString(9);
+                grupos[i][9]= rs.getString(10);
+                i=i+1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return grupos;
+	}
+
+	@Override
+	public boolean comprobarAsignatura(String asignatura) {
+		try {
+            Statement st = Conexion.getConexion().createStatement();
+            ResultSet rs = st.executeQuery("Select * FROM asignatura where nombreasignatura= '"+asignatura+"'");
+            if(!rs.next()){
+                return true;
+            }else{
+                return false;
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+	}
+
+	@Override
+	public String[][] desplegarInformacionHistoria() {
+		int i=0;
+        String sql;
+        sql="select A.nombreasignatura, A.creditos, AH.nota"
+        		+ " from estudiante E, historiaasignatura H, asignatura_historia AH, asignatura A "
+        		+ "where E.codigoestudiante = '"+getCodigoEstudiante()+"' and E.codigoestudiante = H.codigoestudiante and H.idhistoria = AH.idhistoria and AH.idasignatura = A.idasignatura";
+        try {
+            Statement st = Conexion.getConexion().createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next()){
+                i=i+1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String[][] historia = new String[i][10];
+        i=0;
+        /*sql="select A.nombreasignatura, A.creditos, A.idasignatura, G.idgrupo, G.salon, G.horainicio, G.horafinal, G.dia1, G.dia2 ,G.dia3"
+        		+ " from asignatura A, grupoasignatura G "
+        		+ "where A.nombreasignatura = '"+getCodigoEstudiante()+"' and A.idasignatura = G.idasignatura";*/
+        try {
+            Statement st = Conexion.getConexion().createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next()){
+                historia[i][0]= rs.getString(1);
+                historia[i][1]= rs.getString(2);
+                historia[i][2]= rs.getString(3);
+                i=i+1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return historia;
+	}
+
+	@Override
+	public boolean existenciaHistoria() {
+		try {
+            Statement st = Conexion.getConexion().createStatement();
+            String sql="select A.nombreasignatura, A.creditos, AH.nota"
+            		+ " from estudiante E, historiaasignatura H, asignatura_historia AH, asignatura A "
+            		+ "where E.codigoestudiante = '"+getCodigoEstudiante()+"' and E.codigoestudiante = H.codigoestudiante and H.idhistoria = AH.idhistoria and AH.idasignatura = A.idasignatura";
+            ResultSet rs = st.executeQuery(sql);
+            if(!rs.next()){
+                return true;
+            }else{
+                return false;
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+	}
+
+	@Override
+	public int cuposMateria(String grupo) {
+		String sql;
+        sql="select count(E.codigoestudiante) "
+        		+ "from estudiante E, horario H "
+        		+ "where H.idgrupo = '"+grupo+"' and h.\"codigoEstudiante\" = E.codigoestudiante";
+        int numeroDatos=-1;
+        try {
+            Statement st = Conexion.getConexion().createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next()){
+                numeroDatos = Integer.parseInt(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return numeroDatos;
+	}
+	
+	@Override
+	public boolean existenciaGrupo(String grupo){
+		try {
+            Statement st = Conexion.getConexion().createStatement();
+            String sql="select idgrupo "
+            		+ "from grupoasignatura "
+            		+ "where idgrupo = '"+grupo+"' ";
+            ResultSet rs = st.executeQuery(sql);
+            if(!rs.next()){
+                return true;
+            }else{
+                return false;
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
 	}
 
 }

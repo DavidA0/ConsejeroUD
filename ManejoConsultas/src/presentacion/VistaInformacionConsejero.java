@@ -3,9 +3,12 @@ package presentacion;
 
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 import cableado.IConsultas;
+import cableado.LoginMenu;
 import logica.InformacionConsejero;
+import utilidades.Cargador;
 
 public class VistaInformacionConsejero extends javax.swing.JFrame {
     /**
@@ -80,11 +83,23 @@ public class VistaInformacionConsejero extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        /*MenuConsejero eleccion = new MenuConsejero(Integer.toString(cod));
-        eleccion.setLocationRelativeTo(null);
-        eleccion.setVisible(true);
-        dispose();*/
+    	Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
+		Class cls = null;
+		try {                 
+			cls = cargador.cargarUnaClase(LoginMenu.class.getName());
+			if(cls != null) {
+                dispose(); 
+                LoginMenu LoginMenu = (LoginMenu)cls.newInstance();
+                LoginMenu.setConsejero(consulta);
+                LoginMenu.mostrarMenuConsejero();
+			}else{
+    			JOptionPane.showMessageDialog(null, "No se encuentra componente ManejoMenu");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }//GEN-LAST:event_jButton1ActionPerformed
+    
     public void mostrarinformacionConsejero(){
         InformacionConsejero info = new InformacionConsejero(consulta);
         String[] datos = info.mostrarInformacion();

@@ -27,6 +27,23 @@ public class VentanaEstudiante{
         MenuEstudiante vista = new MenuEstudiante(estudiante);
         vista.setVisible(true);
     }
+
+    public void consultarViabilidadEstudiante(){
+    	Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
+		Class cls = null;
+		try {
+			cls = cargador.cargarUnaClase(IMenuConsultas.class.getName());
+			if(cls != null) {
+				IMenuConsultas IMenuConsultas = (IMenuConsultas)cls.newInstance();
+				IMenuConsultas.setEstudiante(estudiante);
+				IMenuConsultas.mostrarViabilidadEstudiante();
+			}else{
+    			JOptionPane.showMessageDialog(null, "No se encuentra componente ManejoConsultas");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
     
     public boolean comprobacionMenuConsultas(){
     	Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
@@ -62,9 +79,27 @@ public class VentanaEstudiante{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	//IMenuConsultas menu = new ManejoConsultas();
-    	//menu.setEstudiante(estudiante);
-    	//menu.mostrarHorario();
+    }
+    
+    public void consultarHistorial(){
+    	if(estudiante.existenciaHistoria()==false){
+    		Cargador cargador = new Cargador("componentes",ClassLoader.getSystemClassLoader());
+    		Class cls = null;
+    		try {
+    			cls = cargador.cargarUnaClase(IMenuConsultas.class.getName());
+    			if(cls != null) {
+    				IMenuConsultas IMenuConsultas = (IMenuConsultas)cls.newInstance();
+    				IMenuConsultas.setEstudiante(estudiante);
+    				IMenuConsultas.mostrarHistorialAcademicoEstudiante();
+    			}else{
+        			JOptionPane.showMessageDialog(null, "No se encuentra componente ManejoConsultas");
+    			}
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+    	}else{
+    		JOptionPane.showMessageDialog(null, "El estudiante no tiene historia academica");
+    	}
     }
     
     public void consultarInformacion(){
